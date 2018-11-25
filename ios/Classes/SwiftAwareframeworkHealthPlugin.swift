@@ -17,7 +17,7 @@ public class SwiftAwareframeworkHealthPlugin: AwareFlutterPluginCore, FlutterPlu
             }
             self.healthSensor?.CONFIG.sensorObserver = self
             self.healthSensor?.CONFIG.isHeartRateFetch = true
-            self.healthSensor?.CONFIG.fetchInterval = 1
+            // self.healthSensor?.CONFIG.fetchInterval = 1
             return self.healthSensor
         }else{
             return nil
@@ -33,23 +33,16 @@ public class SwiftAwareframeworkHealthPlugin: AwareFlutterPluginCore, FlutterPlu
 
     public static func register(with registrar: FlutterPluginRegistrar) {
         let instance = SwiftAwareframeworkHealthPlugin()
-        // add own channel
-        super.setChannels(with: registrar,
-                          instance: instance,
-                          methodChannelName: "awareframework_health/method",
-                          eventChannelName: "awareframework_health/event")
-        
-        let hrStreamChannel = FlutterEventChannel.init(name: "awareframework_health/event_on_heart_rate_data_changed", binaryMessenger: registrar.messenger())
-        hrStreamChannel.setStreamHandler(instance)
+        super.setMethodChannel(with: registrar, instance: instance, channelName: "awareframework_health/method")
+        super.setEventChannels(with: registrar, instance: instance, channelNames:
+            ["awareframework_health/event",
+             "awareframework_health/event_on_heart_rate_data_changed"])
     }
 
     
     public func onHealthKitAuthorizationStatusChanged(success: Bool, error: Error?) {
         if success {
             if let sensor = self.healthSensor {
-                // let start = Date().addingTimeInterval(-1 * 60*60*24*7)
-                // print(start)
-                // sensor.fetchHRData(start)
                 sensor.fetchHRData(sensor.lastHRSyncDate)
             }
         }

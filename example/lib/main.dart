@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
 
-import 'package:flutter/services.dart';
 import 'package:awareframework_health/awareframework_health.dart';
-import 'package:awareframework_core/awareframework_core.dart';
 
 void main() => runApp(new MyApp());
 
@@ -26,6 +23,7 @@ class _MyAppState extends State<MyApp> {
 
     sensor = new HealthSensor(config);
 
+    sensor.start();
   }
 
   @override
@@ -35,7 +33,7 @@ class _MyAppState extends State<MyApp> {
           appBar: new AppBar(
             title: const Text('Plugin Example App'),
           ),
-          body: new HealthCard(sensor: sensor,)
+          body: new HealthCard(sensor: sensor)
       ),
     );
   }
